@@ -1,0 +1,1 @@
+ALTER TABLE `tasks` MODIFY COLUMN `completed` boolean NOT NULL;

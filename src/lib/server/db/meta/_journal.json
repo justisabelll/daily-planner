@@ -15,6 +15,13 @@
       "when": 1729133631813,
       "tag": "0001_typical_blob",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1729139477792,
+      "tag": "0002_loving_tusk",
+      "breakpoints": true
     }
   ]
 }
