@@ -20,8 +20,8 @@
 	}
 </script>
 
-<div class="overflow-hidden my-12 p-8">
-	<div class="max-w-3xl mx-auto space-y-6">
+<div class="overflow-hidden my-6 p-8">
+	<div class="max-w-6xl mx-auto space-y-6">
 		{#each sortedTasks as task (task.id)}
 			<div
 				animate:flip={{ duration: 400 }}
@@ -29,7 +29,7 @@
 				out:fly={{ y: 50, duration: 400 }}
 				class={`p-6 rounded-2xl flex items-center justify-between ${
 					task.completed ? 'bg-gray-50' : 'bg-white'
-				} border border-gray-200 shadow-sm transition-all duration-500 ease-in-out hover:shadow-sm`}
+				} border border-gray-200 shadow-sm transition-all duration-500 ease-in-out hover:shadow-md`}
 			>
 				<div class="flex items-center flex-1 space-x-4 min-w-0">
 					<div
@@ -55,7 +55,7 @@
 						{task.task}
 					</p>
 				</div>
-				<div class="flex items-center ml-4 flex-shrink-0">
+				<div class="flex items-center ml-4 space-x-2 flex-shrink-0">
 					<form
 						action="?/toggleTask"
 						method="POST"
@@ -80,6 +80,31 @@
 							{task.completed ? 'Undo' : 'Complete'}
 						</button>
 					</form>
+					{#if !task.completed}
+						<form action="?/deleteTask" method="POST" use:enhance>
+							<input type="hidden" name="id" value={task.id} />
+							<button
+								type="submit"
+								class="text-gray-400 hover:text-red-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-300 rounded-full p-2 group"
+								aria-label="Delete task"
+							>
+								<svg
+									class="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									></path>
+								</svg>
+							</button>
+						</form>
+					{/if}
 				</div>
 			</div>
 		{/each}

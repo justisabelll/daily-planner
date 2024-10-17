@@ -1,12 +1,12 @@
 import { db } from '$lib/server/db/index';
 import { tasks } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 
 import { rateLimit } from '$lib/server/ratelimiter';
 
 export const load: PageServerLoad = async () => {
-	const allTasks = await db.select().from(tasks);
+	const allTasks = await db.select().from(tasks).orderBy(desc(tasks.createdAt));
 
 	return {
 		tasks: allTasks
@@ -19,7 +19,7 @@ export const actions: Actions = {
 		const task = data.get('task') as string;
 
 		try {
-			await db.insert(tasks).values({ task });
+			await db.insert(tasks).values({ task, completed: false });
 		} catch (error) {
 			console.error(error);
 			return { success: false };
@@ -47,6 +47,21 @@ export const actions: Actions = {
 		} catch (error) {
 			console.error(error);
 
+			return { success: false };
+		}
+
+		return { success: true };
+	},
+
+	deleteTask: async ({ request }) => {
+		const data = await request.formData();
+		const id = data.get('id') as string;
+		const IntId = parseInt(id);
+
+		try {
+			await db.delete(tasks).where(eq(tasks.id, IntId));
+		} catch (error) {
+			console.error(error);
 			return { success: false };
 		}
 
