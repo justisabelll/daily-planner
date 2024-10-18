@@ -9,6 +9,8 @@ if (!dbURL) {
 	throw new Error('DATABASE_URL is not set');
 }
 
-const db = drizzle({ connection: { uri: dbURL } });
+const db = drizzle({
+	connection: { uri: dbURL, database: 'mysql' }
+});
 
 export { db };
