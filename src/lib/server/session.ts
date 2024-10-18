@@ -21,7 +21,7 @@ const createSession = async (cookies: Cookies) => {
 
 	cookies.set(SESSION_COOKIE_NAME, sessionId, {
 		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
+		secure: import.meta.env.PROD,
 		maxAge: SESSION_EXPIRY,
 		path: '/'
 	});
