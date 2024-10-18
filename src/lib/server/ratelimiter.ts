@@ -1,36 +1,43 @@
 // import { dev } from '$app/environment';
+import redis from '$lib/server/redis';
 
 interface RateLimitOptions {
 	maxRequests: number;
 	windowMs: number;
 }
 
+// TODO: add ui that tells the user to slow down or whatever
+
 const defaultOptions: RateLimitOptions = {
-	maxRequests: 50,
-	windowMs: 60 * 1000 // 1 minute
+	maxRequests: 100,
+	windowMs: 5 * 60 * 1000 // 5 minutes
 };
 
-const ipMap = new Map<string, { count: number; resetTime: number }>();
-
-export function rateLimit(ip: string, options: RateLimitOptions = defaultOptions) {
+export async function rateLimit(ip: string, options: RateLimitOptions = defaultOptions) {
 	// if (dev) {
 	// 	return { success: true, remaining: Infinity };
 	// }
 
-	const now = Date.now();
-	const record = ipMap.get(ip);
+	const key = `rate_limit:${ip}`;
+	try {
+		// Increment the count for this IP
+		const count = await redis.incr(key);
 
-	if (!record || now > record.resetTime) {
-		ipMap.set(ip, { count: 1, resetTime: now + options.windowMs });
-		return { success: true, remaining: options.maxRequests - 1 };
+		if (count === 1) {
+			// Set the expiration time for the key
+			await redis.pexpire(key, options.windowMs);
+		}
+
+		if (count > options.maxRequests) {
+			return { success: false, remaining: 0 };
+		}
+
+		return { success: true, remaining: options.maxRequests - count };
+	} catch (error) {
+		console.error('Rate limiter error:', error);
+		// In case of Redis failure, allow the request
+		return { success: true, remaining: options.maxRequests };
 	}
-
-	if (record.count >= options.maxRequests) {
-		return { success: false, remaining: 0 };
-	}
-
-	record.count++;
-	return { success: true, remaining: options.maxRequests - record.count };
 }
 
 export function createRateLimiter(options: RateLimitOptions = defaultOptions) {
@@ -40,24 +47,27 @@ export function createRateLimiter(options: RateLimitOptions = defaultOptions) {
 /**
  * How this rate limiter works:
  *
- * 1. The rate limiter uses a Map (ipMap) to store rate limit information for each IP address.
+ * 1. The rate limiter uses Redis to store rate limit information for each IP address.
  *
  * 2. When a request comes in, the rateLimit function is called with the IP address.
  *
- * 3. If there's no record for the IP or the current time is past the reset time:
- *    - A new record is created with a count of 1 and a new reset time.
- *    - The request is allowed.
+ * 3. A Redis key is created for the IP address with a prefix 'rate_limit:'.
  *
- * 4. If there's an existing record:
- *    - If the count has reached the maximum allowed requests, the request is denied.
- *    - Otherwise, the count is incremented and the request is allowed.
+ * 4. The count for this IP is incremented using Redis' INCR command.
  *
- * 5. The function returns an object indicating whether the request was successful
+ * 5. If it's the first request (count === 1), an expiration time is set for the key.
+ *
+ * 6. If the count exceeds the maximum allowed requests, the request is denied.
+ *
+ * 7. The function returns an object indicating whether the request was successful
  *    and how many requests remain for the current window.
  *
- * 6. The createRateLimiter function allows creating a rate limiter with custom options.
+ * 8. In case of a Redis error, the request is allowed as a fallback.
  *
- * 7. The exported rateLimiter is a pre-configured instance using the default options.
+ * 9. The createRateLimiter function allows creating a rate limiter with custom options.
+ *
+ * 10. The rate limiter uses a sliding window approach, where each request resets
+ *     the expiration time for the key, ensuring a rolling time window.
  *
  * Note: There's commented-out code for bypassing the rate limit in development mode.
  */
