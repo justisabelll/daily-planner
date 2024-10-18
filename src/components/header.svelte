@@ -19,25 +19,27 @@
 	}, 1000);
 </script>
 
-<div class="m-4 p-6 rounded-2xl border border-gray-300/50 shadow-sm bg-white overflow-hidden">
-	<div class="flex justify-between items-center">
-		<div class="transform transition-all duration-700 hover:translate-x-2">
-			<p class="text-5xl font-extralight tracking-tight text-gray-900">DAILY PLANNER</p>
-			<p class="mt-2 text-sm font-light text-gray-400 uppercase tracking-widest">Ephemeral Tasks</p>
-		</div>
-		<div class="relative text-right space-y-4">
-			<p class="text-2xl font-serif font-thin uppercase tracking-widest text-gray-700 opacity-80">
-				{date}
-			</p>
-			<p
-				class="text-4xl font-sans font-light uppercase tracking-tight text-gray-900 inline-block transition-all duration-500 hover:tracking-widest"
-			>
-				{time}
-			</p>
-			<p class="text-xs font-mono tracking-widest text-gray-500 mt-2 opacity-60">NOW</p>
-			<div
-				class="absolute top-0 right-0 w-16 h-16 border-t border-r border-gray-200 transition-all duration-500 hover:w-20 hover:h-20"
-			></div>
+<div class="p-4">
+	<div
+		class=" p-6 rounded-2xl bg-white overflow-hidden border border-gray-200 shadow-sm transition-all duration-300 ease-in-out hover:shadow-sm hover:border-gray-300"
+	>
+		<div class="flex justify-between items-center">
+			<div class="transform transition-all duration-700 hover:translate-x-1">
+				<p class="text-3xl font-light tracking-widest text-gray-800">DAILY PLANNER</p>
+				<p class="mt-1 text-xs font-light text-gray-500 uppercase tracking-wider">
+					Ephemeral Tasks
+				</p>
+			</div>
+			<div class="text-right">
+				<p class="text-lg font-light uppercase tracking-wider text-gray-700">
+					{date}
+				</p>
+				<p
+					class="text-2xl font-light uppercase tracking-wide text-gray-800 inline-block transition-all duration-500 hover:tracking-wider"
+				>
+					{time}
+				</p>
+			</div>
 		</div>
 	</div>
 </div>

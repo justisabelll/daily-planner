@@ -22,91 +22,181 @@
 
 <div class="overflow-hidden my-6 p-8">
 	<div class="max-w-6xl mx-auto space-y-6">
-		{#each sortedTasks as task (task.id)}
-			<div
-				animate:flip={{ duration: 400 }}
-				in:fade={{ duration: 400 }}
-				out:fly={{ y: 50, duration: 400 }}
-				class={`p-6 rounded-2xl flex items-center justify-between ${
-					task.completed ? 'bg-gray-50' : 'bg-white'
-				} border border-gray-200 shadow-sm transition-all duration-500 ease-in-out hover:shadow-md`}
-			>
-				<div class="flex items-center flex-1 space-x-4 min-w-0">
-					<div
-						class={`flex-shrink-0 w-8 h-8 rounded-full border-2 ${
-							task.completed ? 'border-gray-300 bg-gray-300' : 'border-gray-400'
-						} transition-all duration-500 ease-in-out`}
-					>
-						{#if task.completed}
-							<svg class="w-7 h-7 text-white" viewBox="0 0 20 20" fill="currentColor">
-								<path
-									fill-rule="evenodd"
-									d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-						{/if}
-					</div>
-					<p
-						class={`text-xl font-light tracking-wide transition-all duration-500 ease-in-out ${
-							task.completed ? 'text-gray-400' : 'text-gray-800'
-						}`}
-					>
-						{task.task}
-					</p>
-				</div>
-				<div class="flex items-center ml-4 space-x-2 flex-shrink-0">
-					<form
-						action="?/toggleTask"
-						method="POST"
-						use:enhance={() => {
-							return ({ result }) => {
-								if (result.type === 'success') {
-									handleToggle(task);
-								}
-							};
-						}}
-					>
-						<input type="hidden" name="id" value={task.id} />
-						<input type="hidden" name="completionState" value={!task.completed} />
-						<button
-							type="submit"
-							class={`px-4 py-2 text-sm font-light tracking-wide ${
-								task.completed
-									? 'text-gray-400 bg-gray-100 border-gray-200'
-									: 'text-gray-600 bg-white border-gray-300'
-							} border rounded-full hover:bg-gray-200 hover:text-gray-800 hover:border-gray-400 hover:shadow-md transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-300`}
+		<div class="hidden lg:grid lg:grid-cols-2 lg:gap-6">
+			{#each sortedTasks as task (task.id)}
+				<div
+					animate:flip={{ duration: 400 }}
+					in:fade={{ duration: 400 }}
+					out:fly={{ y: 50, duration: 400 }}
+					class={`p-6 rounded-2xl flex items-center justify-between ${
+						task.completed ? 'bg-[#f0f0eb]' : 'bg-white'
+					} border border-gray-200 shadow-sm transition-all duration-300 ease-in-out hover:shadow-sm hover:border-gray-300`}
+				>
+					<div class="flex items-center flex-1 space-x-4 min-w-0">
+						<div
+							class={`flex-shrink-0 w-8 h-8 rounded-full border-2 ${
+								task.completed ? 'border-gray-400 bg-gray-400' : 'border-gray-500'
+							} transition-all duration-300 ease-in-out`}
 						>
-							{task.completed ? 'Undo' : 'Complete'}
-						</button>
-					</form>
-					{#if !task.completed}
-						<form action="?/deleteTask" method="POST" use:enhance>
+							{#if task.completed}
+								<svg class="w-7 h-7 text-white" viewBox="0 0 20 20" fill="currentColor">
+									<path
+										fill-rule="evenodd"
+										d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+							{/if}
+						</div>
+						<p
+							class={`text-xl font-light tracking-wide transition-all duration-300 ease-in-out ${
+								task.completed ? 'text-gray-500' : 'text-gray-800'
+							}`}
+						>
+							{task.task}
+						</p>
+					</div>
+					<div class="flex items-center ml-4 space-x-2 flex-shrink-0">
+						<form
+							action="?/toggleTask"
+							method="POST"
+							use:enhance={() => {
+								return ({ result }) => {
+									if (result.type === 'success') {
+										handleToggle(task);
+									}
+								};
+							}}
+						>
 							<input type="hidden" name="id" value={task.id} />
+							<input type="hidden" name="completionState" value={!task.completed} />
 							<button
 								type="submit"
-								class="text-gray-400 hover:text-red-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-300 rounded-full p-2 group"
-								aria-label="Delete task"
+								class={`px-4 py-2 text-sm font-light tracking-wide ${
+									task.completed
+										? 'text-gray-500 bg-[#f0f0eb] border-gray-300'
+										: 'text-gray-700 bg-white border-gray-400'
+								} border rounded-full hover:bg-[#f8f8f5] hover:text-gray-700 hover:border-gray-400 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400`}
 							>
-								<svg
-									class="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-									></path>
-								</svg>
+								{task.completed ? 'Undo' : 'Complete'}
 							</button>
 						</form>
-					{/if}
+						{#if !task.completed}
+							<form action="?/deleteTask" method="POST" use:enhance>
+								<input type="hidden" name="id" value={task.id} />
+								<button
+									type="submit"
+									class="text-gray-500 hover:text-red-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400 rounded-full p-2 group"
+									aria-label="Delete task"
+								>
+									<svg
+										class="w-6 h-6 transform group-hover:rotate-45 transition-transform duration-300"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+										></path>
+									</svg>
+								</button>
+							</form>
+						{/if}
+					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
+		<div class="lg:hidden space-y-6">
+			{#each sortedTasks as task (task.id)}
+				<div
+					animate:flip={{ duration: 400 }}
+					in:fade={{ duration: 400 }}
+					out:fly={{ y: 50, duration: 400 }}
+					class={`p-6 rounded-2xl flex items-center justify-between ${
+						task.completed ? 'bg-[#f0f0eb]' : 'bg-white'
+					} border border-gray-200 shadow-sm transition-all duration-300 ease-in-out hover:shadow-sm hover:border-gray-300`}
+				>
+					<div class="flex items-center flex-1 space-x-4 min-w-0">
+						<div
+							class={`flex-shrink-0 w-8 h-8 rounded-full border-2 ${
+								task.completed ? 'border-gray-400 bg-gray-400' : 'border-gray-500'
+							} transition-all duration-300 ease-in-out`}
+						>
+							{#if task.completed}
+								<svg class="w-7 h-7 text-white" viewBox="0 0 20 20" fill="currentColor">
+									<path
+										fill-rule="evenodd"
+										d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+							{/if}
+						</div>
+						<p
+							class={`text-xl font-light tracking-wide transition-all duration-300 ease-in-out ${
+								task.completed ? 'text-gray-500' : 'text-gray-800'
+							}`}
+						>
+							{task.task}
+						</p>
+					</div>
+					<div class="flex items-center ml-4 space-x-2 flex-shrink-0">
+						<form
+							action="?/toggleTask"
+							method="POST"
+							use:enhance={() => {
+								return ({ result }) => {
+									if (result.type === 'success') {
+										handleToggle(task);
+									}
+								};
+							}}
+						>
+							<input type="hidden" name="id" value={task.id} />
+							<input type="hidden" name="completionState" value={!task.completed} />
+							<button
+								type="submit"
+								class={`px-4 py-2 text-sm font-light tracking-wide ${
+									task.completed
+										? 'text-gray-500 bg-[#f0f0eb] border-gray-300'
+										: 'text-gray-700 bg-white border-gray-400'
+								} border rounded-full hover:bg-[#f8f8f5] hover:text-gray-700 hover:border-gray-400 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400`}
+							>
+								{task.completed ? 'Undo' : 'Complete'}
+							</button>
+						</form>
+						{#if !task.completed}
+							<form action="?/deleteTask" method="POST" use:enhance>
+								<input type="hidden" name="id" value={task.id} />
+								<button
+									type="submit"
+									class="text-gray-500 hover:text-red-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400 rounded-full p-2 group"
+									aria-label="Delete task"
+								>
+									<svg
+										class="w-6 h-6 transform group-hover:rotate-45 transition-transform duration-300"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+										></path>
+									</svg>
+								</button>
+							</form>
+						{/if}
+					</div>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
