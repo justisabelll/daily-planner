@@ -3,6 +3,7 @@ import { mysqlTable, varchar, int, datetime, boolean } from 'drizzle-orm/mysql-c
 import { sql } from 'drizzle-orm';
 
 export const tasks = mysqlTable('tasks', {
+	userId: varchar('user_id', { length: 255 }).notNull(),
 	id: int('id').primaryKey().notNull().autoincrement(),
 	task: varchar('task', { length: 255 }).notNull(),
 	completed: boolean('completed').default(false).notNull(),
