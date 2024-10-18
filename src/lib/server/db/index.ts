@@ -10,7 +10,7 @@ if (!dbURL) {
 }
 
 const db = drizzle({
-	connection: { uri: dbURL, database: 'mysql' }
+	connection: { uri: dbURL }
 });
 
 export { db };

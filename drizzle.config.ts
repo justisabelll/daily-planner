@@ -14,7 +14,6 @@ export default defineConfig({
 	schema: 'src/lib/server/db/schema.ts',
 	dialect: 'mysql',
 	dbCredentials: {
-		url: dbURL,
-		database: 'mysql'
+		url: dbURL
 	}
 });
