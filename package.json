@@ -40,6 +40,7 @@
 		"@libsql/client": "^0.14.0",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.35.1",
+		"ioredis": "^5.4.1",
 		"mysql2": "^3.11.3",
 		"svelte-french-toast": "^1.2.0"
 	}
