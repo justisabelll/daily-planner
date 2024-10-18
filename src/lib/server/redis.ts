@@ -1,9 +1,10 @@
 import { Redis } from 'ioredis';
+import { REDIS_URL } from '$env/static/private';
 
-if (!import.meta.env.REDIS_URL) {
+if (!REDIS_URL) {
 	throw new Error('REDIS_URL is not set');
 }
 
-const redis = new Redis(import.meta.env.REDIS_URL);
+const redis = new Redis(REDIS_URL);
 
 export default redis;
