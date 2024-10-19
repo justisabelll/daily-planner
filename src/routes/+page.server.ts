@@ -12,12 +12,13 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 	// Convert stored timestamp to number for comparison
 	const storedTime = parseInt(timestamp);
-	const currentTime = Date.now();
+	const currentDate = new Date();
 
-	// Check if more than 24 hours have passed
-	if (currentTime - storedTime > 24 * 60 * 60 * 1000) {
+	// Check if it's a new day
+	const storedDate = new Date(storedTime);
+	if (currentDate.toDateString() !== storedDate.toDateString()) {
 		await db.delete(tasks).where(eq(tasks.userId, user));
-		const newTimeStamp = currentTime.toString();
+		const newTimeStamp = currentDate.getTime().toString();
 
 		// Update the session with the new timestamp
 		await updateSession(cookies, { data: { user, timestamp: newTimeStamp } });
